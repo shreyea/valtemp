@@ -1,16 +1,17 @@
 /* Handcrafted font styling */
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fredoka:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #fffafc;
-  --foreground: #5a1a3a;
-  --pastel-1: #fff0f6; /* soft rose */
-  --pastel-2: #fff7f9; /* light blush */
-  --pastel-3: #f6f0ff; /* soft lavender */
+  --background: #fefcfd;
+  --foreground: #64495c;
+  --pastel-1: #fff5f7; /* soft rose */
+  --pastel-2: #fff9fb; /* light blush */
+  --pastel-3: #faf5ff; /* soft lavender */
+  --pastel-4: #fef7f0; /* soft peach */
 }
 
 body {
@@ -84,7 +85,8 @@ body {
 }
 
 .font-handwritten {
-  font-family: 'Pacifico', cursive;
+  font-family: 'Fredoka', 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+  font-weight: 700;
 }
 
 .font-soft {
