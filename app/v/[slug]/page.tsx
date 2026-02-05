@@ -1,8 +1,37 @@
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import ValentineView from './ValentineView'
 
 interface PageProps {
   params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/template/public?slug=${encodeURIComponent(slug)}`, {
+      cache: 'no-store'
+    })
+
+    if (response.ok) {
+      const result = await response.json()
+      if (result.success && result.template?.data?.question) {
+        return {
+          title: result.template.data.question,
+          description: 'A special Valentine message just for you!',
+        }
+      }
+    }
+  } catch (error) {
+    // Fall back to default
+  }
+
+  return {
+    title: 'Will you be my Valentine?',
+    description: 'A special Valentine message just for you!',
+  }
 }
 
 export default async function PublicViewPage({ params }: PageProps) {

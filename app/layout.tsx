@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Valentine Template - Simp",
+  title: "Will you be my Valentine?",
   description: "Create and share your Valentine's Day interactive templates",
 };
 
