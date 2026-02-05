@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import confetti from 'canvas-confetti'
 import { Heart, X } from 'lucide-react'
 
@@ -14,6 +14,7 @@ interface ValentineCardProps {
 export default function ValentineCard({ question, onQuestionChange, isEditable }: ValentineCardProps) {
   const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 })
   const noButtonRef = useRef<HTMLButtonElement>(null)
+  const cardRef = useRef<HTMLDivElement | null>(null)
 
   const handleYesClick = () => {
     // Trigger confetti
@@ -59,16 +60,28 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
     })
   }
 
+  // Smooth, responsive movement constrained inside the card
   const handleNoHover = () => {
-    if (!noButtonRef.current) return
-    
-    // Keep button within a constrained area (300x200px around center)
-    const maxX = 150
-    const maxY = 100
-    
-    const newX = Math.random() * maxX * 2 - maxX
-    const newY = Math.random() * maxY * 2 - maxY
-    
+    if (!noButtonRef.current || !cardRef.current) return
+
+    const cardRect = cardRef.current.getBoundingClientRect()
+    const btnRect = noButtonRef.current.getBoundingClientRect()
+
+    // available space inside card
+    const availableWidth = cardRect.width - btnRect.width - 24 // padding
+    const availableHeight = cardRect.height - btnRect.height - 24
+
+    // small random offset near center for playful movement
+    const maxOffsetX = Math.max(availableWidth / 2, 20)
+    const maxOffsetY = Math.max(availableHeight / 4, 12)
+
+    const centerX = 0
+    const centerY = 0
+
+    // calculate a new position clamped to available area
+    const newX = Math.max(-maxOffsetX, Math.min(maxOffsetX, (Math.random() - 0.5) * 2 * maxOffsetX))
+    const newY = Math.max(-maxOffsetY, Math.min(maxOffsetY, (Math.random() - 0.5) * 2 * maxOffsetY))
+
     setNoButtonPos({ x: newX, y: newY })
   }
 
@@ -119,10 +132,11 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
       </motion.div>
 
       <motion.div
+        ref={cardRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8 relative min-h-[80px]"
+        className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8 relative min-h-[120px] p-2"
       >
         <motion.button
           whileHover={{ scale: 1.1 }}
@@ -144,10 +158,11 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
           }}
           transition={{
             type: 'spring',
-            stiffness: 500,
-            damping: 15,
+            stiffness: 300,
+            damping: 28,
+            mass: 0.7,
           }}
-          className="bg-gray-300 text-gray-700 px-8 py-4 rounded-full text-xl font-bold shadow-lg cursor-pointer flex items-center gap-2"
+          className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-full text-lg font-semibold shadow-md cursor-pointer flex items-center gap-2 transition-transform"
         >
           <X className="w-5 h-5" />
           No

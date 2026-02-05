@@ -32,7 +32,7 @@ export default function ValentineView({ question }: ValentineViewProps) {
       <div className="fixed bottom-4 left-0 right-0 text-center z-20">
         <a
           href="/auth/login"
-          className="inline-flex items-center gap-2 bg-white/95 backdrop-blur-md px-6 py-3 rounded-full text-pink-600 hover:bg-white transition-all shadow-xl font-semibold hover:scale-105 transform"
+          className="inline-flex items-center gap-2 bg-white/95 backdrop-blur-md px-6 py-3 rounded-full text-pink-600 transition-all shadow-xl font-semibold transform opacity-20 hover:opacity-60"
         >
           <Heart className="w-5 h-5 fill-pink-600" />
           Create Your Own

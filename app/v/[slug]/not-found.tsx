@@ -20,7 +20,7 @@ export default function NotFound() {
         </p>
         <a
           href="/auth/login"
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-105"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl font-semibold transition-all transform opacity-20 hover:opacity-60"
         >
           <Heart className="w-5 h-5 fill-white" />
           Create Your Own
