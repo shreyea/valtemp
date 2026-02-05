@@ -82,7 +82,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-purple-500 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-pastel-love relative overflow-hidden">
       {/* Animated background overlay */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 -left-4 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>

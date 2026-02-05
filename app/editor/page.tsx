@@ -214,7 +214,7 @@ export default function EditorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-400 via-pink-500 to-purple-500 relative overflow-hidden">
+    <div className="min-h-screen bg-pastel-love relative overflow-hidden">
       <FloatingHearts />
       <Sparkles />
       <DebugPanel />

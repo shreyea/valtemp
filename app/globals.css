@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #fef5f8;
+  --background: #fffafc;
   --foreground: #5a1a3a;
+  --pastel-1: #fff0f6; /* soft rose */
+  --pastel-2: #fff7f9; /* light blush */
+  --pastel-3: #f6f0ff; /* soft lavender */
 }
 
 body {
@@ -44,4 +47,19 @@ body {
 
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Pastel soft love background utility */
+.bg-pastel-love {
+  background: linear-gradient(135deg, var(--pastel-1) 0%, var(--pastel-2) 45%, var(--pastel-3) 100%);
+}
+
+/* Subtle grain overlay for texture */
+.bg-pastel-love::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 8px 8px;
+  pointer-events: none;
 }
