@@ -30,14 +30,15 @@ Before you begin, ensure you have:
 
 1. Create a new Supabase project at [https://supabase.com](https://supabase.com)
 
-2. Create a `templates` table with the following schema:
+2. Create a `projects` table with the following schema:
 
 ```sql
-CREATE TABLE templates (
+CREATE TABLE projects (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   owner_email TEXT NOT NULL,
   template_type TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
+  template_code TEXT NOT NULL,
+  slug TEXT UNIQUE,
   is_published BOOLEAN DEFAULT true,
   data JSONB,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -45,41 +46,26 @@ CREATE TABLE templates (
 );
 
 -- Create index for faster lookups
-CREATE INDEX idx_templates_owner_type ON templates(owner_email, template_type);
-CREATE INDEX idx_templates_slug ON templates(slug);
-CREATE INDEX idx_templates_type_published ON templates(template_type, is_published);
+CREATE INDEX idx_projects_owner_type ON projects(owner_email, template_type);
+CREATE INDEX idx_projects_slug ON projects(slug);
+CREATE INDEX idx_projects_type_published ON projects(template_type, is_published);
+CREATE INDEX idx_projects_owner_code ON projects(owner_email, template_code);
 ```
 
-3. **Enable Row Level Security (RLS)**:
+3. **Enable Row Level Security (RLS)** (Optional - API routes use service role key to bypass RLS):
 
 ```sql
--- Enable RLS on templates table
-ALTER TABLE templates ENABLE ROW LEVEL SECURITY;
+-- Enable RLS on projects table
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
--- Policy: Users can view their own templates
-CREATE POLICY "Users can view own templates"
-  ON templates
-  FOR SELECT
-  USING (owner_email = auth.email());
-
--- Policy: Users can update their own templates
-CREATE POLICY "Users can update own templates"
-  ON templates
-  FOR UPDATE
-  USING (owner_email = auth.email());
-
--- Policy: Anyone can view published templates
+-- Policy: Anyone can view published templates (for public sharing)
 CREATE POLICY "Public can view published templates"
-  ON templates
+  ON projects
   FOR SELECT
   USING (is_published = true);
 ```
 
-3. Enable Email Auth in Supabase:
-   - Go to Authentication → Providers
-   - Enable Email provider
-   - **Set up email/password authentication** (disable magic link if desired)
-   - Configure email templates (optional)
+**Note**: The application uses API routes with the service role key to handle authentication and authorization, which bypasses RLS. You can optionally enable these policies for additional security layers.
 
 4. **Create test user and template record**:
 
@@ -87,7 +73,7 @@ CREATE POLICY "Public can view published templates"
 -- No Supabase Auth user needed!
 -- Just insert a template record with email + template_code:
 
-INSERT INTO templates (owner_email, template_type, template_code, slug, is_published, data)
+INSERT INTO projects (owner_email, template_type, template_code, slug, is_published, data)
 VALUES 
   ('your-test-email@example.com', 'simp', 'YOUR-SECRET-CODE', 'test-slug-123', true, '{"question": "Will you be my Valentine? 💖"}');
 ```
@@ -115,7 +101,11 @@ cp .env.example .env.local
 ```
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
+
+**Important**: The `SUPABASE_SERVICE_ROLE_KEY` is required for API routes to bypass Row Level Security policies. You can find this in your Supabase project settings under API → Project API keys → `service_role` key. **Keep this secret!**
 
 ## Development
 

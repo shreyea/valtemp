@@ -1,14 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import ValentineCard from '@/components/ValentineCard'
 import FloatingHearts from '@/components/FloatingHearts'
 import Sparkles from '@/components/Sparkles'
 import DebugPanel from '@/components/DebugPanel'
 import { Template } from '@/lib/types'
-import { generateSlug } from '@/lib/utils'
 
 export default function EditorPage() {
   const [question, setQuestion] = useState('Will you be my Valentine? 💖')
@@ -20,7 +18,6 @@ export default function EditorPage() {
   const [authorized, setAuthorized] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
     loadTemplate()
@@ -31,12 +28,10 @@ export default function EditorPage() {
       // Check session storage for credentials
       const userEmail = sessionStorage.getItem('user_email')
       const templateCode = sessionStorage.getItem('template_code')
-      const templateId = sessionStorage.getItem('template_id')
       
       console.log('🔍 Editor - Session check:', {
         email: userEmail,
-        hasCode: !!templateCode,
-        templateId: templateId
+        hasCode: !!templateCode
       })
       
       if (!userEmail || !templateCode) {
@@ -45,44 +40,38 @@ export default function EditorPage() {
         return
       }
 
-      console.log('🔎 Editor - Loading template with:', {
-        owner_email: userEmail,
-        template_code: '***',
-        template_type: 'simp'
+      console.log('🔎 Editor - Loading template via API')
+
+      // Call API to get template (bypasses RLS)
+      const response = await fetch('/api/template/get', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          templateCode: templateCode,
+        }),
       })
 
-      // Query for template with all filters
-      const { data: existingTemplate, error: fetchError } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('owner_email', userEmail)
-        .eq('template_code', templateCode)
-        .eq('template_type', 'simp')
-        .single()
+      const result = await response.json()
 
-      console.log('📊 Editor - Template query result:', {
-        found: !!existingTemplate,
-        error: fetchError?.message,
-        errorCode: fetchError?.code,
-        templateType: existingTemplate?.template_type,
-        isPublished: existingTemplate?.is_published,
-        hasData: !!existingTemplate?.data
+      console.log('📊 Editor - API response:', {
+        status: response.status,
+        success: result.success,
+        hasTemplate: !!result.template
       })
 
-      if (fetchError || !existingTemplate) {
+      if (!response.ok || !result.success) {
         console.log('❌ Editor - Template not found or access denied')
-        console.log('🔍 Debugging info:', {
-          errorMessage: fetchError?.message,
-          errorCode: fetchError?.code,
-          expectedEmail: userEmail,
-          expectedType: 'simp'
-        })
         sessionStorage.clear()
         setAuthorized(false)
-        setErrorMessage('You are not authorized to edit this template. If you need help, contact @thecraftingfactory on Instagram.')
+        setErrorMessage(result.error || 'You are not authorized to edit this template. If you need help, contact @thecraftingfactory on Instagram.')
         setLoading(false)
         return
       }
+
+      const existingTemplate = result.template
 
       console.log('✅ Editor - Template loaded successfully:', {
         id: existingTemplate.id,
@@ -91,25 +80,11 @@ export default function EditorPage() {
         is_published: existingTemplate.is_published
       })
 
-      // Initialize data if NULL
-      let templateData = existingTemplate.data
-      if (!templateData || !templateData.question) {
-        console.log('🔧 Initializing NULL data')
-        templateData = { question: 'Will you be my Valentine? 💖' }
-        
-        // Update the database with initialized data
-        const { error: updateError } = await supabase
-          .from('projects')
-          .update({ data: templateData })
-          .eq('id', existingTemplate.id)
-        
-        if (updateError) {
-          console.error('Error initializing data:', updateError)
-        }
-      }
+      // Store template ID for future updates
+      sessionStorage.setItem('template_id', existingTemplate.id)
 
       setTemplate(existingTemplate)
-      setQuestion(templateData.question)
+      setQuestion(existingTemplate.data.question)
       setShareUrl(`${window.location.origin}/v/${existingTemplate.slug}`)
       setAuthorized(true)
     } catch (error) {
@@ -131,47 +106,51 @@ export default function EditorPage() {
 
     setSaving(true)
     try {
-      // Ensure slug exists
-      const slug = template.slug || generateSlug()
+      const userEmail = sessionStorage.getItem('user_email')
+      const templateCode = sessionStorage.getItem('template_code')
+
+      if (!userEmail || !templateCode) {
+        console.log('⚠️ Save - No credentials in session')
+        router.push('/auth/login')
+        return
+      }
       
-      console.log('💾 Saving template:', {
+      console.log('💾 Saving template via API:', {
         templateId: template.id,
-        questionLength: newQuestion.length,
-        willPublish: true,
-        slug: slug
+        questionLength: newQuestion.length
       })
       
-      const { data, error } = await supabase
-        .from('projects')
-        .update({ 
-          data: { question: newQuestion },
-          is_published: true,
-          slug: slug
-        })
-        .eq('id', template.id)
-        .select()
+      // Call API to update template (bypasses RLS)
+      const response = await fetch('/api/template/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          templateCode: templateCode,
+          templateId: template.id,
+          question: newQuestion,
+        }),
+      })
 
-      if (error) {
-        console.error('❌ Save failed:', {
-          error: error.message,
-          code: error.code,
-          templateId: template.id
-        })
-        throw error
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        console.error('❌ Save failed:', result.error)
+        throw new Error(result.error || 'Failed to save')
       }
 
       console.log('✅ Saved successfully:', {
-        templateId: template.id,
-        is_published: true,
-        slug: slug,
-        shareUrl: `${window.location.origin}/v/${slug}`
+        templateId: result.template.id,
+        is_published: result.template.is_published,
+        slug: result.template.slug
       })
       
-      // Update share URL if slug was generated
-      if (!template.slug) {
-        setShareUrl(`${window.location.origin}/v/${slug}`)
-        setTemplate({ ...template, slug })
-      }
+      // Update local state with the response
+      setTemplate(result.template)
+      setShareUrl(`${window.location.origin}/v/${result.template.slug}`)
+      
     } catch (error: any) {
       console.error('💥 Save error:', error)
     } finally {
