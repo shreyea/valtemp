@@ -219,22 +219,19 @@ export default function EditorPage() {
       <Sparkles />
       <DebugPanel />
       
-      {/* Animated background overlay */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 -left-4 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-      </div>
+      {/* Decorative elements */}
+      <div className="absolute top-10 left-10 w-32 h-32 bg-pink-200/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 right-20 w-40 h-40 bg-purple-200/20 rounded-full blur-3xl"></div>
       
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white flex items-center gap-2">
-            <Heart className="w-8 h-8 fill-white" />
-            Editor
+          <h1 className="text-4xl font-handwritten text-pink-600 flex items-center gap-3 drop-shadow-sm">
+            <Heart className="w-10 h-10 fill-pink-600" />
+            Valentine Editor
           </h1>
           <button
             onClick={handleLogout}
-            className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-pink-600 hover:bg-white transition-colors flex items-center gap-2 font-medium"
+            className="bg-white/90 backdrop-blur-sm px-5 py-2.5 rounded-full text-pink-600 hover:bg-white transition-all flex items-center gap-2 font-soft font-semibold shadow-md hover:shadow-lg"
           >
             <LogOut className="w-4 h-4" />
             Logout
@@ -254,52 +251,55 @@ export default function EditorPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-4 rounded-2xl font-bold text-lg hover:from-green-600 hover:to-emerald-600 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl"
+            className="w-full bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 text-white px-6 py-5 rounded-2xl font-bold text-lg hover:from-emerald-500 hover:to-teal-600 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl font-soft border-2 border-white/30"
+            style={{
+              boxShadow: '0 10px 30px rgba(16, 185, 129, 0.3)'
+            }}
           >
             {saving ? (
               <>
-                <Save className="w-5 h-5 animate-pulse" />
+                <Save className="w-6 h-6 animate-pulse" />
                 Saving...
               </>
             ) : saveSuccess ? (
               <>
-                <Check className="w-5 h-5" />
+                <Check className="w-6 h-6" />
                 Saved Successfully!
               </>
             ) : (
               <>
-                <Save className="w-5 h-5" />
+                <Save className="w-6 h-6" />
                 Save Changes
               </>
             )}
           </button>
         </div>
 
-        <div className="max-w-2xl mx-auto bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-xl">
-          <h3 className="text-xl font-bold text-pink-600 mb-4 flex items-center gap-2">
-            <Heart className="w-5 h-5 fill-pink-600" />
+        <div className="max-w-2xl mx-auto bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-xl border-2 border-pink-100/50">
+          <h3 className="text-2xl font-handwritten text-pink-600 mb-6 flex items-center gap-2">
+            <Heart className="w-6 h-6 fill-pink-600" />
             Share Your Valentine
           </h3>
           
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <input
               type="text"
               value={shareUrl}
               readOnly
-              className="flex-1 px-4 py-3 border border-pink-200 rounded-lg bg-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="flex-1 px-5 py-4 border-2 border-pink-200 rounded-xl bg-white/70 focus:outline-none focus:ring-2 focus:ring-pink-400 font-soft text-gray-700"
             />
             <button
               onClick={handleCopyLink}
-              className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-rose-600 transition-all flex items-center gap-2"
+              className="bg-gradient-to-r from-pink-400 to-rose-500 text-white px-8 py-4 rounded-xl font-semibold hover:from-pink-500 hover:to-rose-600 transition-all flex items-center gap-2 shadow-lg font-soft border-2 border-white/30"
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4" />
+                  <Check className="w-5 h-5" />
                   Copied!
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4" />
+                  <Copy className="w-5 h-5" />
                   Copy
                 </>
               )}

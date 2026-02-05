@@ -15,12 +15,9 @@ export default function ValentineView({ question }: ValentineViewProps) {
       <FloatingHearts />
       <Sparkles />
       
-      {/* Animated background overlay */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 -left-4 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-      </div>
+      {/* Decorative elements */}
+      <div className="absolute top-10 left-10 w-32 h-32 bg-pink-200/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 right-20 w-40 h-40 bg-purple-200/20 rounded-full blur-3xl"></div>
       
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8">
         <ValentineCard
@@ -29,10 +26,10 @@ export default function ValentineView({ question }: ValentineViewProps) {
         />
       </div>
 
-      <div className="fixed bottom-4 left-0 right-0 text-center z-20">
+      <div className="fixed bottom-6 left-0 right-0 text-center z-20">
         <a
           href="/auth/login"
-          className="inline-flex items-center gap-2 bg-white/95 backdrop-blur-md px-6 py-3 rounded-full text-pink-600 transition-all shadow-xl font-semibold transform opacity-20 hover:opacity-60"
+          className="inline-flex items-center gap-2 bg-white/95 backdrop-blur-md px-6 py-3 rounded-full text-pink-600 transition-all shadow-lg font-soft font-semibold transform opacity-15 hover:opacity-70 border-2 border-pink-100/50"
         >
           <Heart className="w-5 h-5 fill-pink-600" />
           Create Your Own
