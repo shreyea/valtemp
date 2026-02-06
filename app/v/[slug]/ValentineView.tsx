@@ -14,11 +14,19 @@ export default function ValentineView({ question }: ValentineViewProps) {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Scrapbook paper texture background */}
+      {/* Enhanced pink-toned background gradient */}
       <div
         className="absolute inset-0"
         style={{
           background: `
-            linear-gradient(135deg, #fff9fb 0%, #fff5f7 30%, #fef7f0 60%, #faf5ff 100%)
+            linear-gradient(135deg, 
+              #fff0f5 0%, 
+              #ffe4f0 20%, 
+              #ffd6e8 40%, 
+              #ffecf5 60%, 
+              #fff5fa 80%, 
+              #fef0f7 100%
+            )
           `,
         }}
       />
@@ -106,26 +114,31 @@ export default function ValentineView({ question }: ValentineViewProps) {
         }}
       />
 
-      {/* Soft gradient blobs */}
+      {/* Enhanced pink gradient blobs for camera visibility */}
       <motion.div
-        className="absolute top-20 left-[10%] w-40 h-40 bg-pink-200/30 rounded-full blur-3xl"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.4, 0.3] }}
-        transition={{ duration: 6, repeat: Infinity }}
+        className="absolute top-16 left-[8%] w-56 h-56 bg-pink-300/40 rounded-full blur-3xl"
+        animate={{ scale: [1, 1.15, 1], opacity: [0.35, 0.5, 0.35] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute bottom-32 right-[10%] w-48 h-48 bg-purple-200/25 rounded-full blur-3xl"
-        animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.35, 0.25] }}
-        transition={{ duration: 7, repeat: Infinity, delay: 1 }}
+        className="absolute bottom-24 right-[8%] w-64 h-64 bg-fuchsia-200/35 rounded-full blur-3xl"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.45, 0.3] }}
+        transition={{ duration: 10, repeat: Infinity, delay: 1, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute top-1/2 left-[5%] w-32 h-32 bg-amber-100/30 rounded-full blur-2xl"
-        animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.4, 0.3] }}
-        transition={{ duration: 5, repeat: Infinity, delay: 2 }}
+        className="absolute top-1/2 left-[3%] w-44 h-44 bg-rose-200/45 rounded-full blur-3xl"
+        animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.55, 0.4] }}
+        transition={{ duration: 7, repeat: Infinity, delay: 2, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute top-1/3 right-[8%] w-36 h-36 bg-rose-100/35 rounded-full blur-2xl"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.35, 0.45, 0.35] }}
-        transition={{ duration: 8, repeat: Infinity, delay: 0.5 }}
+        className="absolute top-1/4 right-[5%] w-52 h-52 bg-pink-200/40 rounded-full blur-3xl"
+        animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0.5, 0.35] }}
+        transition={{ duration: 9, repeat: Infinity, delay: 0.5, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 left-[40%] w-48 h-48 bg-rose-300/30 rounded-full blur-3xl"
+        animate={{ scale: [1, 1.12, 1], opacity: [0.25, 0.4, 0.25] }}
+        transition={{ duration: 11, repeat: Infinity, delay: 3, ease: 'easeInOut' }}
       />
 
       {/* Background particles */}

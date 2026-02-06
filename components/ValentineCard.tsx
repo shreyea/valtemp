@@ -109,13 +109,13 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
     }, 200)
   }
 
-  // Improved: Move button to random positions across the entire card
+  // Improved: Move button within safe bounds of the card
   const moveNoButton = useCallback(() => {
     if (!noButtonRef.current || !containerRef.current) return
 
-    // Throttle movement to prevent glitchy rapid updates
+    // Throttle movement to prevent laggy rapid updates
     const now = Date.now()
-    if (now - lastMoveTime < 120) return
+    if (now - lastMoveTime < 200) return
     setLastMoveTime(now)
 
     const newCount = hoverCount + 1
@@ -127,26 +127,25 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
     const containerRect = containerRef.current.getBoundingClientRect()
     const btnRect = noButtonRef.current.getBoundingClientRect()
 
-    // Calculate available space - use more of the container
-    const padding = 16
-    const maxX = (containerRect.width / 2) - (btnRect.width / 2) - padding
-    const maxY = (containerRect.height / 2) - (btnRect.height / 2) - padding
+    // Calculate safe bounds - keep button well within the container
+    const padding = 24
+    const maxX = Math.max(0, (containerRect.width / 2) - (btnRect.width / 2) - padding)
+    const maxY = Math.max(0, (containerRect.height / 2) - (btnRect.height / 2) - padding)
 
-    // Define possible positions (corners, edges, and random spots)
+    // Define positions within safe bounds (reduced multipliers)
     const positions = [
-      { x: -maxX * 0.9, y: -maxY * 0.8 },  // top-left
-      { x: maxX * 0.9, y: -maxY * 0.8 },   // top-right
-      { x: -maxX * 0.9, y: maxY * 0.8 },   // bottom-left
-      { x: maxX * 0.9, y: maxY * 0.8 },    // bottom-right
-      { x: 0, y: -maxY * 0.9 },            // top-center
-      { x: 0, y: maxY * 0.9 },             // bottom-center
-      { x: -maxX * 0.95, y: 0 },           // left-center
-      { x: maxX * 0.95, y: 0 },            // right-center
-      { x: -maxX * 0.7, y: -maxY * 0.5 },  // upper-left area
-      { x: maxX * 0.7, y: -maxY * 0.5 },   // upper-right area
-      { x: -maxX * 0.7, y: maxY * 0.5 },   // lower-left area
-      { x: maxX * 0.7, y: maxY * 0.5 },    // lower-right area
-      { x: (Math.random() - 0.5) * maxX * 1.8, y: (Math.random() - 0.5) * maxY * 1.6 }, // random
+      { x: -maxX * 0.6, y: -maxY * 0.5 },   // top-left
+      { x: maxX * 0.6, y: -maxY * 0.5 },    // top-right
+      { x: -maxX * 0.6, y: maxY * 0.5 },    // bottom-left
+      { x: maxX * 0.6, y: maxY * 0.5 },     // bottom-right
+      { x: 0, y: -maxY * 0.6 },             // top-center
+      { x: 0, y: maxY * 0.6 },              // bottom-center
+      { x: -maxX * 0.7, y: 0 },             // left-center
+      { x: maxX * 0.7, y: 0 },              // right-center
+      { x: -maxX * 0.4, y: -maxY * 0.3 },   // upper-left
+      { x: maxX * 0.4, y: -maxY * 0.3 },    // upper-right
+      { x: -maxX * 0.4, y: maxY * 0.3 },    // lower-left
+      { x: maxX * 0.4, y: maxY * 0.3 },     // lower-right
     ]
 
     // Pick a random position that's different from current
@@ -157,13 +156,13 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
       attempts++
     } while (
       attempts < 5 &&
-      Math.abs(newPos.x - noButtonPos.x) < maxX * 0.4 &&
-      Math.abs(newPos.y - noButtonPos.y) < maxY * 0.4
+      Math.abs(newPos.x - noButtonPos.x) < maxX * 0.3 &&
+      Math.abs(newPos.y - noButtonPos.y) < maxY * 0.3
     )
 
-    // Add slight randomness
-    const finalX = Math.max(-maxX, Math.min(maxX, newPos.x + (Math.random() - 0.5) * 30))
-    const finalY = Math.max(-maxY, Math.min(maxY, newPos.y + (Math.random() - 0.5) * 20))
+    // Clamp to safe bounds (no extra randomness to prevent overflow)
+    const finalX = Math.max(-maxX, Math.min(maxX, newPos.x))
+    const finalY = Math.max(-maxY, Math.min(maxY, newPos.y))
 
     setNoButtonPos({ x: finalX, y: finalY })
   }, [hoverCount, noButtonPos, lastMoveTime])
@@ -337,9 +336,9 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
           }}
           transition={{
             type: 'spring',
-            stiffness: 120,
-            damping: 15,
-            mass: 0.8,
+            stiffness: 100,
+            damping: 25,
+            mass: 0.6,
           }}
           className="bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-500 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg md:text-xl font-medium shadow-md cursor-pointer flex items-center gap-2 font-soft border border-slate-200/60 transition-colors min-w-[90px] sm:min-w-[110px] justify-center"
           style={{
@@ -504,6 +503,7 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
         transition={{ delay: 0.6 }}
         className="text-center text-[#f06292] mt-8 text-base font-soft font-medium relative z-10"
       >
+
         {hoverCount > 0 ? `Attempts: ${hoverCount} - Keep trying!` : "Hover over 'No' if you dare..."}
       </motion.p>
     </motion.div>

@@ -30,12 +30,12 @@ export default function EditorPage() {
       // Check session storage for credentials
       const userEmail = sessionStorage.getItem('user_email')
       const templateCode = sessionStorage.getItem('template_code')
-      
+
       console.log('🔍 Editor - Session check:', {
         email: userEmail,
         hasCode: !!templateCode
       })
-      
+
       if (!userEmail || !templateCode) {
         console.log('❌ Editor - No session found, redirecting to login')
         router.push('/auth/login')
@@ -119,12 +119,12 @@ export default function EditorPage() {
         router.push('/auth/login')
         return
       }
-      
+
       console.log('💾 Saving template via API:', {
         templateId: template.id,
         questionLength: question.length
       })
-      
+
       // Call API to update template (bypasses RLS)
       const response = await fetch('/api/template/update', {
         method: 'POST',
@@ -151,13 +151,13 @@ export default function EditorPage() {
         is_published: result.template.is_published,
         slug: result.template.slug
       })
-      
+
       // Update local state with the response
       setTemplate(result.template)
       setShareUrl(`${window.location.origin}/v/${result.template.slug}`)
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 2000)
-      
+
     } catch (error: any) {
       console.error('💥 Save error:', error)
     } finally {
@@ -178,10 +178,19 @@ export default function EditorPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-purple-500">
-        <div className="text-2xl text-white flex items-center gap-3">
-          <Heart className="w-8 h-8 animate-pulse fill-white" />
-          Loading...
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #fff0f5 0%, #ffe4f0 25%, #ffd6e8 50%, #ff8ec4 75%, #ff69b4 100%)'
+        }}
+      >
+        {/* Animated background blobs */}
+        <div className="absolute top-20 left-[15%] w-48 h-48 bg-pink-300/40 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-[10%] w-56 h-56 bg-fuchsia-300/35 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-[5%] w-40 h-40 bg-rose-200/50 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+
+        <div className="text-2xl text-white flex items-center gap-3 relative z-10 bg-white/20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg">
+          <Heart className="w-10 h-10 animate-pulse fill-white drop-shadow-lg" />
+          <span className="font-handwritten text-3xl drop-shadow-md">Loading...</span>
         </div>
       </div>
     )
@@ -189,21 +198,29 @@ export default function EditorPage() {
 
   if (!authorized) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-purple-500">
-        <div className="bg-white/95 backdrop-blur-sm p-8 rounded-3xl shadow-2xl w-full max-w-md text-center">
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #fff0f5 0%, #ffe4f0 25%, #ffd6e8 50%, #ff8ec4 75%, #ff69b4 100%)'
+        }}
+      >
+        {/* Animated background blobs */}
+        <div className="absolute top-16 left-[10%] w-52 h-52 bg-pink-300/40 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-24 right-[12%] w-60 h-60 bg-rose-300/35 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+
+        <div className="bg-white/95 backdrop-blur-sm p-8 rounded-3xl shadow-2xl w-full max-w-md text-center relative z-10 border-2 border-pink-200/50">
           <div className="flex justify-center mb-4">
             <Shield className="w-16 h-16 text-pink-600" />
           </div>
-          <h1 className="text-2xl font-bold text-pink-600 mb-4">Access Denied</h1>
-          <p className="text-gray-700 mb-6 font-semibold">
+          <h1 className="text-2xl font-handwritten text-pink-600 mb-4">Access Denied</h1>
+          <p className="text-gray-700 mb-6 font-soft font-medium">
             {errorMessage}
           </p>
-          <p className="text-gray-600 text-sm mb-6">
+          <p className="text-gray-600 text-sm mb-6 font-soft">
             Only users with an existing template record can access the editor.
           </p>
           <button
             onClick={handleLogout}
-            className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto"
+            className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto shadow-lg"
           >
             <LogOut className="w-4 h-4" />
             Logout
@@ -218,11 +235,11 @@ export default function EditorPage() {
       <FloatingHearts />
       <Sparkles />
       <DebugPanel />
-      
+
       {/* Decorative elements */}
       <div className="absolute top-10 left-10 w-32 h-32 bg-pink-200/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 right-20 w-40 h-40 bg-purple-200/20 rounded-full blur-3xl"></div>
-      
+
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-handwritten text-pink-600 flex items-center gap-3 drop-shadow-sm">
@@ -280,7 +297,7 @@ export default function EditorPage() {
             <Heart className="w-6 h-6 fill-pink-600" />
             Share Your Valentine
           </h3>
-          
+
           <div className="flex gap-3">
             <input
               type="text"

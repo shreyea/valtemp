@@ -20,7 +20,7 @@ export default function LoginPage() {
 
     try {
       const normalizedEmail = email.trim().toLowerCase()
-      
+
       console.log('🔍 Login attempt:', {
         email: normalizedEmail,
         hasTemplateCode: !!templateCode,
@@ -66,12 +66,12 @@ export default function LoginPage() {
         slug: result.template.slug,
         templateType: result.template.template_type,
       })
-      
+
       // Store credentials in sessionStorage
       sessionStorage.setItem('user_email', normalizedEmail)
       sessionStorage.setItem('template_code', templateCode)
       sessionStorage.setItem('template_id', result.template.id)
-      
+
       router.push('/editor')
     } catch (error: any) {
       console.error('💥 Login error:', error)
@@ -83,9 +83,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-pastel-love relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-20 w-40 h-40 bg-pink-200/30 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-20 w-48 h-48 bg-purple-200/30 rounded-full blur-3xl"></div>
+      {/* Enhanced pink decorative elements */}
+      <div className="absolute top-16 left-16 w-48 h-48 bg-pink-300/40 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-16 right-16 w-56 h-56 bg-fuchsia-200/35 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/3 right-[10%] w-40 h-40 bg-rose-300/30 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/3 left-[8%] w-44 h-44 bg-pink-200/45 rounded-full blur-3xl"></div>
+      <div className="absolute top-[60%] left-[40%] w-36 h-36 bg-rose-200/25 rounded-full blur-3xl"></div>
 
       <div className="bg-white/95 backdrop-blur-md p-10 rounded-3xl shadow-2xl w-full max-w-md relative z-10 border-4 border-pink-100/50">
         <div className="text-center mb-8">
@@ -152,11 +155,10 @@ export default function LoginPage() {
         </form>
 
         {message && (
-          <div className={`mt-5 p-4 rounded-xl text-sm text-center font-soft font-medium ${
-            message.includes('Check') 
-              ? 'bg-green-100 text-green-700' 
+          <div className={`mt-5 p-4 rounded-xl text-sm text-center font-soft font-medium ${message.includes('Check')
+              ? 'bg-green-100 text-green-700'
               : 'bg-red-100 text-red-700'
-          }`}>
+            }`}>
             {message}
           </div>
         )}

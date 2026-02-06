@@ -8,10 +8,14 @@
 :root {
   --background: #fefcfd;
   --foreground: #64495c;
-  --pastel-1: #fff5f7; /* soft rose */
-  --pastel-2: #fff9fb; /* light blush */
-  --pastel-3: #faf5ff; /* soft lavender */
-  --pastel-4: #fef7f0; /* soft peach */
+  --pastel-1: #fff5f7;
+  /* soft rose */
+  --pastel-2: #fff9fb;
+  /* light blush */
+  --pastel-3: #faf5ff;
+  /* soft lavender */
+  --pastel-4: #fef7f0;
+  /* soft peach */
 }
 
 body {
@@ -30,12 +34,15 @@ body {
   0% {
     transform: translate(0px, 0px) scale(1);
   }
+
   33% {
     transform: translate(30px, -50px) scale(1.1);
   }
+
   66% {
     transform: translate(-20px, 20px) scale(0.9);
   }
+
   100% {
     transform: translate(0px, 0px) scale(1);
   }
@@ -53,9 +60,14 @@ body {
   animation-delay: 4s;
 }
 
-/* Pastel soft love background with image overlay */
+/* Pastel soft love background with enhanced pink tones */
 .bg-pastel-love {
-  background: linear-gradient(135deg, var(--pastel-1) 0%, var(--pastel-2) 45%, var(--pastel-3) 100%);
+  background: linear-gradient(135deg,
+      #fff0f5 0%,
+      #ffe4f0 25%,
+      #ffd6e8 50%,
+      #ffecf5 75%,
+      #fef0f7 100%);
   position: relative;
 }
 
@@ -72,14 +84,15 @@ body {
   z-index: 0;
 }
 
-/* Handcrafted subtle texture overlay */
+/* Enhanced pink texture overlay */
 .bg-pastel-love::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(221, 160, 221, 0.05) 0%, transparent 50%);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 105, 180, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 182, 193, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 192, 203, 0.1) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
 }
