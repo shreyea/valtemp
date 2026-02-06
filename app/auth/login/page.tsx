@@ -156,12 +156,25 @@ export default function LoginPage() {
 
         {message && (
           <div className={`mt-5 p-4 rounded-xl text-sm text-center font-soft font-medium ${message.includes('Check')
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
+            ? 'bg-green-100 text-green-700'
+            : 'bg-red-100 text-red-700'
             }`}>
             {message}
           </div>
         )}
+
+        {/* Get your own link */}
+        <div className="mt-6 pt-5 border-t border-pink-100 text-center">
+          <a
+            href="https://www.instagram.com/thecraftingfactory"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-pink-500 hover:text-pink-600 font-soft font-semibold transition-colors hover:underline"
+          >
+            <Heart className="w-4 h-4 fill-current" />
+            Get your own
+          </a>
+        </div>
       </div>
     </div>
   )

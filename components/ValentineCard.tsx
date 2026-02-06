@@ -113,9 +113,9 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
   const moveNoButton = useCallback(() => {
     if (!noButtonRef.current || !containerRef.current) return
 
-    // Throttle movement to prevent laggy rapid updates
+    // Throttle movement - increased delay for smoother feel
     const now = Date.now()
-    if (now - lastMoveTime < 200) return
+    if (now - lastMoveTime < 350) return
     setLastMoveTime(now)
 
     const newCount = hoverCount + 1
@@ -180,8 +180,8 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
         Math.pow(e.clientX - btnCenterX, 2) + Math.pow(e.clientY - btnCenterY, 2)
       )
 
-      // Move when cursor is within 100px of the button center
-      if (distance < 100) {
+      // Move when cursor is within 60px of the button center (less sensitive)
+      if (distance < 60) {
         moveNoButton()
       }
     }
@@ -336,9 +336,9 @@ export default function ValentineCard({ question, onQuestionChange, isEditable }
           }}
           transition={{
             type: 'spring',
-            stiffness: 100,
-            damping: 25,
-            mass: 0.6,
+            stiffness: 80,
+            damping: 35,
+            mass: 0.5,
           }}
           className="bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-500 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg md:text-xl font-medium shadow-md cursor-pointer flex items-center gap-2 font-soft border border-slate-200/60 transition-colors min-w-[90px] sm:min-w-[110px] justify-center"
           style={{
